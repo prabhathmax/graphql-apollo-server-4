@@ -22,6 +22,14 @@ class AccountService {
   async findByUserName(email) {
     return this.repository.findByUserName(email);
   }
+
+  async findByUserId(userId) {
+    return this.repository.findByUserId(userId);
+  }
+
+  async getCompleteProfile(info) {
+    return this.repository.completeProfile(info);
+  }
 }
 
 export default AccountService;

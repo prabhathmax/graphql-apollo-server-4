@@ -9,6 +9,8 @@ import RoleService from './domain/role/service';
 import PermissionRepository from './domain/permission/repository';
 import PermissionService from './domain/permission/service';
 
+const { createLogger, format, transports } = require('winston');
+
 const createContext = async () => {
   const secretsCache = new SecretsCache();
   const dbSecrets = new DbSecrets(secretsCache);
@@ -19,6 +21,19 @@ const createContext = async () => {
     pool: { min: 0, max: 7 },
     useNullAsDefault: true,
   });
+  const access = createLogger({
+    level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
+    exitOnError: false,
+    format: format.combine(
+        format.timestamp({
+          format: 'YYYY-MM-DD HH:mm:ss',
+        }),
+        format.errors({ stack: true }),
+        format.splat(),
+        format.json(),
+    ),
+    transports: [new transports.Console()],
+  });
   const accountRepository = new AccountRepository(knex);
   const accountService = new AccountService(accountRepository);
   const authenticationService = new AuthenticationService(accountService, jwtSecret);
@@ -27,6 +42,9 @@ const createContext = async () => {
   const permissionRepository = new PermissionRepository(knex);
   const permissionService = new PermissionService(permissionRepository);
   return {
+    log: {
+      access,
+    },
     secrets: {
       db: dbSecrets,
       jwt: jwtSecret,

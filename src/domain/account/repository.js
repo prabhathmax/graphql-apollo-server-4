@@ -26,6 +26,7 @@ class AccountRepository {
       'privacy_level as privacyLevel',
       'taggable',
       'mentionable',
+        'email_verified',
       'created_at as createdAt',
       'updated_at as updatedAt',
     ];
@@ -42,6 +43,7 @@ class AccountRepository {
           email: info.email,
           user_name: info.userName,
           privacy_level: info.privacyLevel,
+            email_verified: true,
           password,
           created_at: now,
           updated_at: now,
@@ -109,6 +111,36 @@ class AccountRepository {
 
     return null;
   }
+
+    async findByUserId(userId) {
+        const account = await this.database('accounts')
+            .select(this.accountColumns)
+            .where({ user_id: userId })
+            .first();
+
+        if (account) {
+            return {
+                ...account,
+                profile: await profileForAccount(this.database, userId),
+            };
+        }
+        return null;
+    }
+
+    async completeProfile(info) {
+        const now = new Date();
+      return this.database('profiles')
+          .where({ user_id: info.userId})
+          .update({
+            first_name: info.firstName,
+              last_name: info.lastName,
+              gender: info.gender,
+              dob: info.dob,
+              avatar_image: info.avatarImage,
+              created_at: now,
+              updated_at: now,
+          });
+    }
 }
 
 export default AccountRepository;
