@@ -7,4 +7,6 @@ Grahal apollo server 4 setup
 - Babel and eslint
 - JWT token issue
 - Role permissions with authirization custom directives
+- Logging with winston
+- s3 upload
 
