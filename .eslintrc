@@ -1,0 +1,49 @@
+{
+  "parser": "@babel/eslint-parser",
+  "extends": ["airbnb-base", "prettier"],
+  "env": { "node": true, "commonjs": true, "es6": true },
+  "parserOptions": { "ecmaVersion": 9 },
+  "plugins": ["prettier"],
+  "rules": {
+    "spaced-comment": ["error", "always", { "exceptions": ["!", "/"] }],
+    "prettier/prettier": ["error"],
+    "max-classes-per-file": ["error", 10],
+    "no-restricted-syntax": [
+      "error",
+      {
+        "selector": "ForInStatement",
+        "message": "for..in loops iterate over the entire prototype chain, which is virtually never what you want. Use Object.{keys,values,entries}, and iterate over the resulting array."
+      },
+      {
+        "selector": "LabeledStatement",
+        "message": "Labels are a form of GOTO; using them makes code confusing and hard to maintain and understand."
+      },
+      {
+        "selector": "WithStatement",
+        "message": "`with` is disallowed in strict mode because it makes code impossible to predict and optimize."
+      }
+    ],
+    "eqeqeq": ["error", "always", { "null": "ignore" }],
+    "no-eq-null": 0,
+    "sort-keys": 0,
+    "import/no-import-module-exports": 0,
+    "no-console": 2,
+    "no-underscore-dangle": 0,
+    "func-style": 0,
+    "import/exports-last": 0,
+    "import/no-namespace": 0,
+    "no-use-before-define": 0,
+
+    "babel/object-curly-spacing": 0,
+    "no-await-in-loop": "off",
+    "class-methods-use-this": "off"
+  },
+  "overrides": [
+    {
+      "files": ["*.test.js"],
+      "env": {
+        "jest": true
+      }
+    }
+  ]
+}
